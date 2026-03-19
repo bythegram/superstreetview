@@ -13,7 +13,7 @@ var currentId = 0;
 var uniqueId = function() {
     return ++currentId;
 }
-var apiKey = 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
+var apiKey = (typeof window !== 'undefined' && window.GOOGLE_MAPS_API_KEY) ? window.GOOGLE_MAPS_API_KEY : '';
 var lat = 43.6532;
 var lng = -79.3832;
 
