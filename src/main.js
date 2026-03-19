@@ -28,14 +28,19 @@ function browserGeolocationSuccess(position) {
     position.coords.longitude +
     '&key=' +
     apiKey;
-  console.debug('[geolocation] Fetching reverse-geocode:', geocodeUrl.replace(apiKey, '<redacted>'));
+  console.debug(
+    '[geolocation] Fetching reverse-geocode:',
+    geocodeUrl.replace(apiKey, '<redacted>')
+  );
 
   fetch(geocodeUrl)
     .then((response) => response.json())
     .then((success) => {
       console.debug('[geolocation] Geocode API response status:', success.status);
       console.debug(
-        '[geolocation] Geocode API results (' + (success.results ? success.results.length : 0) + ' total):',
+        '[geolocation] Geocode API results (' +
+          (success.results ? success.results.length : 0) +
+          ' total):',
         success.results
           ? success.results.map((r, i) => ({
               index: i,
@@ -68,7 +73,10 @@ function browserGeolocationSuccess(position) {
       }
     })
     .catch((err) => {
-      console.error('[geolocation] Geocode API fetch failed; falling back to default coordinates.', err);
+      console.error(
+        '[geolocation] Geocode API fetch failed; falling back to default coordinates.',
+        err
+      );
       initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });
     });
 }
@@ -123,10 +131,13 @@ function getLocation() {
       options
     );
   } else {
-    console.warn('[geolocation] navigator.geolocation is not available; using default coordinates.', {
-      DEFAULT_LAT,
-      DEFAULT_LNG,
-    });
+    console.warn(
+      '[geolocation] navigator.geolocation is not available; using default coordinates.',
+      {
+        DEFAULT_LAT,
+        DEFAULT_LNG,
+      }
+    );
   }
 }
 
