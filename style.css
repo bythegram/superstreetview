@@ -76,6 +76,21 @@ body {
 #gameover h2 {
   font-weight: 100;
 }
+#restart-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+  font-weight: 300;
+  color: #fff;
+  background-color: #00ff66;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#restart-btn:hover {
+  background-color: #00cc52;
+}
 .vert_wrapper {
   display: table;
   width: 100%;
