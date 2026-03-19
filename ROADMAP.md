@@ -16,25 +16,21 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 ### Medium
 
-- **`moveForward` uses an implicit global `i`** (`game.js` line 153)  
-  The `for` loop is missing a `var`/`let` declaration for `i`, leaking it into the global scope.  
-  _Fix:_ Change `for(i=0;` to `for(let i=0;`.
+- ✅ **`moveForward` uses an implicit global `i`** (`game.js` line 153) — _Resolved_  
+  Changed `for(i=0;` to `for(let i=0;`.
 
-- **`addWormhole` and `addBunch` declare `markerPos2` but never use it** (`game.js` lines 186, 278)  
-  Dead code increases cognitive load and maintenance cost.  
-  _Fix:_ Remove both unused `markerPos2` declarations.
+- ✅ **`addWormhole` declares `markerPos2` but never uses it** (`game.js` line 186) — _Resolved_  
+  Removed the unused `markerPos2` declaration from `addWormhole`.
 
 - **Timer is entirely commented out** (`game.js` lines 363–399)  
   The countdown timer that enforces a time-limit per life is disabled, making the game infinite and removing any urgency.  
   _Fix:_ Restore the timer logic, test the lives/game-over flow end-to-end, then remove the dead comment block.
 
-- **`upScore` reads `#highscore` and checks `(highScore + 1) % 10`** (`game.js` line 329)  
-  The condition uses the `highScore` variable (read from the game-over overlay element) rather than `newScore`, causing the level-up trigger to fire based on the best-ever score rather than the current session score.  
-  _Fix:_ Replace the `highScore` reference in the level-up modulo check with `newScore` directly.
+- ✅ **`upScore` reads `#highscore` and checks `(highScore + 1) % 10`** (`game.js` line 329) — _Resolved_  
+  The condition now uses `newScore % 10 === 0`, triggering level-up correctly every 10 points scored in the current session.
 
-- **`jQuery.post()` used for GET-style requests** (`game.js` lines 23, 36, 231)  
-  The Google Geocoding and Geolocation APIs are called with `$.post()`. These are GET requests; using POST may fail or produce unexpected results.  
-  _Fix:_ Use `$.getJSON()` or `$.ajax({ method: 'GET' })` with the correct URL and parameters.
+- ✅ **`jQuery.post()` used for GET-style requests** (`game.js` lines 23, 36, 231) — _Resolved_  
+  The Google Geocoding and Geolocation APIs were called with `$.post()`. Replaced with native `fetch()` using the correct HTTP methods (`GET` for Geocoding, `POST` for Geolocation).
 
 ### Low
 
@@ -48,17 +44,17 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 ### Architecture / Code Quality
 
-- **Replace `var` with `let` / `const` throughout `game.js`**  
-  All variables currently use `var`, which has function scope and allows accidental re-declaration. Switching to `const`/`let` prevents a class of bugs and makes intent clearer.
+- ✅ **Replace `var` with `let` / `const` throughout `game.js`** — _Resolved_  
+  All variables now use `const` or `let` as appropriate.
+
+- ✅ **Remove jQuery dependency** — _Resolved_  
+  jQuery 3.4.1 has been removed. All DOM queries, class manipulation, AJAX calls, and timers now use native browser APIs (`fetch`, `document.getElementById`, `classList`, `setTimeout`, `dataset`, `style`).
 
 - **Extract configuration into a single config object or `.env` file**  
   Constants such as `lat`, `lng`, `apiKey`, marker URLs, and level thresholds are scattered throughout the file. Centralising them makes tuning easier and reduces the chance of inconsistency.
 
 - **Modularise `game.js` with ES modules or a bundler**  
   All game logic lives in one 430-line file with no module boundaries. Splitting into logical modules (e.g., `map.js`, `markers.js`, `score.js`, `timer.js`) and bundling with Vite, Rollup, or esbuild would improve maintainability and enable tree-shaking.
-
-- **Remove jQuery dependency**  
-  jQuery 3.4.1 is included solely for `$.post()` and basic DOM selectors. The equivalent native `fetch()` and `document.getElementById()` / `querySelectorAll()` calls are available in every modern browser, eliminating a ~30 KB dependency.
 
 - **Add a linter and formatter**  
   Adopt [ESLint](https://eslint.org/) (with the `eslint:recommended` ruleset) and [Prettier](https://prettier.io/) to enforce consistent style automatically. Add them as `devDependencies` in a `package.json` and run them in CI.
@@ -98,9 +94,9 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | Practice | Status |
 |---|---|
 | API keys stored in environment variables, not source | ⚠️ Partial – key restricted to GitHub Pages referrer domain |
-| `let`/`const` instead of `var` | ❌ TODO |
+| `let`/`const` instead of `var` | ✅ Done |
 | ESLint + Prettier configured | ❌ TODO |
-| No unused variables | ❌ TODO |
+| No unused variables | ✅ Done |
 | Timer and lives system fully working | ❌ TODO |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
 | `Content-Security-Policy` header set | ❌ TODO |
@@ -109,3 +105,4 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | README with setup instructions | ✅ Done |
 | `.gitignore` present | ✅ Done |
 | Open-source license declared | ❌ TODO |
+| jQuery removed (vanilla JS) | ✅ Done |
