@@ -1,5 +1,7 @@
 # Super Street View
 
+**[▶ Play it live on GitHub Pages](https://bythegram.github.io/superstreetview/)**
+
 A browser-based exploration game built on top of Google Maps Street View. Players navigate real-world streets to collect diamonds and rockets, earning points and unlocking new levels as they go.
 
 ## How to Play
