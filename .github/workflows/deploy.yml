@@ -27,13 +27,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Inject API key
+      - name: Inject Maps browser API key (public, referrer-restricted)
         env:
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          GOOGLE_MAPS_BROWSER_API_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_API_KEY }}
         run: |
           python3 - <<'EOF'
           import os
-          key = os.environ['GOOGLE_MAPS_API_KEY']
+          # This is a Google Maps browser API key; it will be embedded in the
+          # deployed index.html/game.js and must be protected via strict HTTP
+          # referrer restrictions in Google Cloud Console, not by secrecy.
+          key = os.environ['GOOGLE_MAPS_BROWSER_API_KEY']
           for filename in ['index.html', 'game.js']:
               with open(filename, 'r') as f:
                   content = f.read()
