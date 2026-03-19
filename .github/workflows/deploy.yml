@@ -15,7 +15,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npm run format:check
+
   deploy:
+    name: Build & Deploy
+    needs: lint
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,51 +48,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        # VITE_GOOGLE_MAPS_API_KEY is a browser-visible key protected by HTTP
+        # referrer restrictions in Google Cloud Console, not by secrecy.
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_API_KEY }}
+        run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
-      - name: Inject Maps browser API key (public, referrer-restricted)
-        env:
-          GOOGLE_MAPS_BROWSER_API_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_API_KEY }}
-        run: |
-          python3 - <<'EOF'
-          import os, sys
-
-          # This is a Google Maps browser API key; it will be embedded in the
-          # deployed index.html/game.js and must be protected via strict HTTP
-          # referrer restrictions in Google Cloud Console, not by secrecy.
-          key = os.environ.get('GOOGLE_MAPS_BROWSER_API_KEY', '')
-          if not key:
-              print(
-                  "ERROR: The GOOGLE_MAPS_BROWSER_API_KEY secret is not set.\n"
-                  "Go to Settings → Secrets and Variables → Actions and add a\n"
-                  "secret named GOOGLE_MAPS_BROWSER_API_KEY with your Maps API key.",
-                  file=sys.stderr
-              )
-              sys.exit(1)
-
-          placeholder = 'GOOGLE_MAPS_API_KEY_PLACEHOLDER'
-          for filename in ['index.html', 'game.js']:
-              with open(filename, 'r') as f:
-                  content = f.read()
-              count = content.count(placeholder)
-              if count == 0:
-                  print(
-                      f"ERROR: placeholder '{placeholder}' not found in {filename}. "
-                      "The file may have been modified incorrectly.",
-                      file=sys.stderr
-                  )
-                  sys.exit(1)
-              content = content.replace(placeholder, key)
-              with open(filename, 'w') as f:
-                  f.write(content)
-              print(f"Replaced {count} occurrence(s) of placeholder in {filename}.")
-          EOF
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
