@@ -34,9 +34,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 ### Low
 
-- **`localStorage` score is never reset on new game**  
-  After "Game Over" the persisted score is not cleared, so the score counter on a fresh reload starts at the last session's value.  
-  _Fix:_ Clear or reset the `score` key in `localStorage` when a new game begins.
+- ✅ **`localStorage` score is never reset on new game** — _Resolved_  
+  `restartGame()` clears the persisted `score` key from `localStorage` when the player starts a new game via the "Play Again" button.
 
 ---
 
@@ -64,8 +63,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 ### Features
 
-- **Restart / play again button on the "Game Over" screen**  
-  Currently the only way to restart is a full page reload. A button that re-initialises game state provides a better user experience.
+- ✅ **Restart / play again button on the "Game Over" screen** — _Resolved_  
+  A "Play Again" button now appears on the Game Over screen. Clicking it calls `restartGame()`, which resets the score, level, lives, and all markers then re-seeds the starting location — no page reload required.
 
 - **Mobile tilt-to-move**  
   The `tilt()` and `DeviceOrientationEvent` handler exist in the code but `tilt()` currently calls `moveForward()` on any positive β value, causing continuous movement. Add a dead-zone threshold and test on real mobile devices.
@@ -98,6 +97,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | ESLint + Prettier configured | ✅ Done |
 | No unused variables | ✅ Done |
 | Timer and lives system fully working | ❌ TODO |
+| Restart / play again button on Game Over screen | ✅ Done |
+| `localStorage` score reset on new game | ✅ Done |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
 | `Content-Security-Policy` header set | ❌ TODO |
 | Google Analytics 4 (replace UA) | ❌ TODO |
