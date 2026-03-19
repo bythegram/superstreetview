@@ -72,7 +72,10 @@ export function initMap(position) {
 
   state.panorama.addListener('position_changed', function () {
     const pos = state.panorama.getPosition();
-    console.debug('[map] panorama position_changed:', pos ? { lat: pos.lat(), lng: pos.lng() } : null);
+    console.debug(
+      '[map] panorama position_changed:',
+      pos ? { lat: pos.lat(), lng: pos.lng() } : null
+    );
     state.map.setCenter(state.panorama.getPosition());
   });
 
