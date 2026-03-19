@@ -14,7 +14,9 @@ A browser-based exploration game built on top of Google Maps Street View. Player
 | Layer | Technology |
 |---|---|
 | Map & Street View | [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript) |
-| DOM manipulation | [jQuery 3.4.1](https://jquery.com/) |
+| Bundler | [Vite 6](https://vite.dev/) |
+| Linter | [ESLint 9](https://eslint.org/) (`eslint:recommended`) |
+| Formatter | [Prettier 3](https://prettier.io/) |
 | Icons | [Font Awesome Pro 5.13](https://fontawesome.com/) |
 | Font | [Roboto Mono – Google Fonts](https://fonts.google.com/specimen/Roboto+Mono) |
 | Analytics | Google Analytics (UA) |
@@ -24,23 +26,30 @@ A browser-based exploration game built on top of Google Maps Street View. Player
 
 ```
 superstreetview/
-├── index.html          # Main HTML shell
-├── game.js             # All game logic (map init, markers, scoring, timer)
-├── style.css           # All styling
-├── collections_en.json # Dataset of curated Street View locations (loaded directly by the client)
-└── icons/              # Sprite & icon assets (GIFs and PNGs)
-    ├── rocket.gif
-    ├── diamond.gif
-    ├── crystalblue.png
-    ├── crystalgreen.png
-    └── ...
+├── src/
+│   ├── main.js             # Entry point – geolocation & global bootstrap
+│   ├── config.js           # API key and default coordinates
+│   ├── state.js            # Shared mutable game state
+│   ├── map.js              # Map & Street View initialisation
+│   ├── markers.js          # Rocket (wormhole) and diamond marker logic
+│   ├── score.js            # Score tracking and level-ups
+│   ├── timer.js            # Countdown timer (stub – see ROADMAP)
+│   └── movement.js         # Tilt-to-move and heading helpers
+├── public/
+│   ├── collections_en.json # Dataset of curated Street View locations
+│   └── icons/              # Sprite & icon assets (GIFs and PNGs)
+├── index.html              # Main HTML shell
+├── style.css               # All styling
+├── vite.config.js          # Vite bundler configuration
+├── eslint.config.js        # ESLint flat config (eslint:recommended + Prettier)
+└── .prettierrc             # Prettier code-style settings
 ```
 
 ## Local Setup
 
 ### Prerequisites
 
-- A static file server or any web server (e.g. `python3 -m http.server 8000`, [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), or similar). No PHP is required.
+- **Node.js 18+** and **npm** (used to run the Vite dev server and build).
 - A [Google Maps Platform](https://console.cloud.google.com/) project with the **Maps JavaScript API** and **Geocoding API** enabled, and a valid API key restricted to your deployment domain.
 
 ### Steps
@@ -51,21 +60,37 @@ superstreetview/
    cd superstreetview
    ```
 
-2. Replace the placeholder API key in `game.js` (and `index.html`) with your own key:
-   ```js
-   // game.js line 16
-   var apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
+2. Install dev dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env.local` file (never committed) with your Google Maps API key:
+   ```
+   VITE_GOOGLE_MAPS_API_KEY=your_key_here
    ```
    > ⚠️ **Restrict your API key** in Google Cloud Console to your deployment domain (e.g. your GitHub Pages URL) to prevent unauthorised use. See the [ROADMAP](ROADMAP.md) for additional security recommendations.
 
-3. Start a local static server:
+4. Start the Vite development server:
    ```bash
-   python3 -m http.server 8000
+   npm run dev
    ```
 
-4. Open `http://localhost:8000` in your browser.
+5. Open the URL printed by Vite (default: `http://localhost:5173`) in your browser.
 
-5. Allow the browser to access your location when prompted. If you deny the request the game falls back to Toronto, Canada (43.6532°N, 79.3832°W).
+6. Allow the browser to access your location when prompted. If you deny the request the game falls back to Toronto, Canada (43.6532°N, 79.3832°W).
+
+### Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the Vite development server with hot-module reload |
+| `npm run build` | Production build → output in `dist/` |
+| `npm run preview` | Serve the production build locally for testing |
+| `npm run lint` | Run ESLint on all source files |
+| `npm run lint:fix` | Auto-fix ESLint issues |
+| `npm run format` | Format all source files with Prettier |
+| `npm run format:check` | Check formatting without writing (used in CI) |
 
 ## Known Issues & Future Plans
 

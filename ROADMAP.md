@@ -53,11 +53,11 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - **Extract configuration into a single config object or `.env` file**  
   Constants such as `lat`, `lng`, `apiKey`, marker URLs, and level thresholds are scattered throughout the file. Centralising them makes tuning easier and reduces the chance of inconsistency.
 
-- **Modularise `game.js` with ES modules or a bundler**  
-  All game logic lives in one 430-line file with no module boundaries. Splitting into logical modules (e.g., `map.js`, `markers.js`, `score.js`, `timer.js`) and bundling with Vite, Rollup, or esbuild would improve maintainability and enable tree-shaking.
+- ✅ **Modularise `game.js` with ES modules or a bundler** — _Resolved_  
+  `game.js` has been split into seven ES modules under `src/` (`config.js`, `state.js`, `map.js`, `markers.js`, `score.js`, `timer.js`, `movement.js`) with `src/main.js` as the Vite entry point. Static assets moved to `public/`. The build outputs a minified, tree-shaken bundle in `dist/`.
 
-- **Add a linter and formatter**  
-  Adopt [ESLint](https://eslint.org/) (with the `eslint:recommended` ruleset) and [Prettier](https://prettier.io/) to enforce consistent style automatically. Add them as `devDependencies` in a `package.json` and run them in CI.
+- ✅ **Add a linter and formatter** — _Resolved_  
+  ESLint 9 (flat config, `eslint:recommended` + `eslint-config-prettier`) and Prettier 3 are configured as `devDependencies`. A dedicated `lint` CI job runs `npm run lint` and `npm run format:check` before every deploy.
 
 - **Replace Font Awesome Pro CDN link** (`index.html` line 9)  
   The current link requires a valid Font Awesome Pro subscription token to load. Replacing it with the free CDN or self-hosted SVGs removes the external dependency.
@@ -95,7 +95,7 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 |---|---|
 | API keys stored in environment variables, not source | ⚠️ Partial – key restricted to GitHub Pages referrer domain |
 | `let`/`const` instead of `var` | ✅ Done |
-| ESLint + Prettier configured | ❌ TODO |
+| ESLint + Prettier configured | ✅ Done |
 | No unused variables | ✅ Done |
 | Timer and lives system fully working | ❌ TODO |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |

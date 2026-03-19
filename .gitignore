@@ -25,13 +25,12 @@ desktop.ini
 *~
 
 # ──────────────────────────────────────────
-# Node / npm (if a build step is added later)
+# Node / npm
 # ──────────────────────────────────────────
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 yarn.lock
 .pnp
 .pnp.js
