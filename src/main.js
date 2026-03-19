@@ -25,13 +25,17 @@ function browserGeolocationSuccess(position) {
   )
     .then((response) => response.json())
     .then((success) => {
-      console.log(success);
-      initMap({
-        coords: {
-          latitude: success.results[1].geometry.location.lat,
-          longitude: success.results[1].geometry.location.lng,
-        },
-      });
+      const result = success.results && success.results[1];
+      if (result && result.geometry && result.geometry.location) {
+        initMap({
+          coords: {
+            latitude: result.geometry.location.lat,
+            longitude: result.geometry.location.lng,
+          },
+        });
+      } else {
+        initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });
+      }
     })
     .catch(() => {
       initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });

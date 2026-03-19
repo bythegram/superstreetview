@@ -27,7 +27,7 @@ export function addWormhole(position, d) {
   const t = 2 * Math.PI * v;
   const x = w * Math.cos(t);
   const y1 = w * Math.sin(t);
-  const x1 = x / Math.cos(y0);
+  const x1 = x / Math.cos((y0 * Math.PI) / 180);
 
   const markerPos = { lat: y0 + y1, lng: x0 + x1 };
 
@@ -97,11 +97,10 @@ export function addWormhole(position, d) {
 
           addWormhole(newPos, 1);
         })
-        .catch(() => {
+        .catch(() => {})
+        .finally(() => {
           panoEl.style.pointerEvents = 'inherit';
         });
-
-      panoEl.style.pointerEvents = 'inherit';
     }
   });
 
@@ -130,7 +129,7 @@ export function addBunch(position) {
   const t = 2 * Math.PI * v;
   const x = w * Math.cos(t);
   const y1 = w * Math.sin(t);
-  const x1 = x / Math.cos(y0);
+  const x1 = x / Math.cos((y0 * Math.PI) / 180);
 
   const newY = y0 + y1;
   const newX = x0 + x1;

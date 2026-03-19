@@ -16,7 +16,8 @@ import { state } from './state.js';
  * @returns {number}
  */
 export function difference(link) {
-  let diff = Math.abs((state.panorama.pov.heading % 360) - link.heading);
+  const pov = state.panorama.getPov();
+  let diff = Math.abs((pov.heading % 360) - link.heading);
   if (diff > 180) {
     diff = Math.abs(360 - diff);
   }
@@ -30,8 +31,11 @@ export function difference(link) {
  * @param {google.maps.StreetViewPanorama} pano
  */
 export function moveForward(pano) {
-  let curr;
   const links = pano.links;
+  if (!links || links.length === 0) {
+    return;
+  }
+  let curr;
   for (let i = 0; i < links.length; i++) {
     if (curr === undefined) {
       curr = links[i];
@@ -54,13 +58,9 @@ export function tilt(x) {
   }
 }
 
-/** Register device-orientation / device-motion listeners. */
+/** Register a device-orientation listener for tilt-to-move. */
 export function registerTiltListener() {
-  const handler = (eventData) => tilt(eventData.beta);
-
   if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', handler, true);
-  } else if (window.DeviceMotionEvent) {
-    window.addEventListener('deviceorientation', handler, true);
+    window.addEventListener('deviceorientation', (eventData) => tilt(eventData.beta), true);
   }
 }

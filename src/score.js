@@ -14,13 +14,13 @@ export function upScore() {
   }, 500);
 
   const scoreEl = document.getElementById('score');
-  const score = parseInt(scoreEl.dataset.score);
+  const score = parseInt(scoreEl.dataset.score, 10);
   const newScore = score + 1;
   scoreEl.textContent = newScore;
   scoreEl.dataset.score = newScore;
 
   const highscoreEl = document.getElementById('highscore');
-  const highScore = parseInt(highscoreEl.textContent);
+  const highScore = parseInt(highscoreEl.textContent, 10);
   if (newScore > highScore) {
     highscoreEl.textContent = newScore;
   }
@@ -33,7 +33,7 @@ export function upScore() {
     }, 500);
 
     const livesEl = document.getElementById('lives');
-    const lives = parseInt(livesEl.textContent) + 1;
+    const lives = parseInt(livesEl.textContent, 10) + 1;
     livesEl.textContent = lives;
 
     document.body.classList.remove('level' + state.level);
