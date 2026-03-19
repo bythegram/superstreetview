@@ -51,9 +51,9 @@ function browserGeolocationSuccess(position) {
           : []
       );
 
-      const result = success.results && success.results[1];
+      const result = success.results && success.results[0];
       if (result && result.geometry && result.geometry.location) {
-        console.debug('[geolocation] Selected result[1]:', {
+        console.debug('[geolocation] Selected result[0]:', {
           formatted_address: result.formatted_address,
           types: result.types,
           location: result.geometry.location,
@@ -66,7 +66,7 @@ function browserGeolocationSuccess(position) {
         });
       } else {
         console.warn(
-          '[geolocation] No usable result at index 1; falling back to default coordinates.',
+          '[geolocation] No usable result at index 0; falling back to default coordinates.',
           { DEFAULT_LAT, DEFAULT_LNG }
         );
         initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });
