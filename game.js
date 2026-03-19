@@ -19,7 +19,7 @@ var lng = -79.3832;
 
 function browserGeolocationSuccess(position) {
 	//get the nearest intersection
-	jQuery.post( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.coords.latitude+","+position.coords.longitude+"&key="+apiKey, function(success) {
+	jQuery.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.coords.latitude+","+position.coords.longitude+"&key="+apiKey, function(success) {
 		console.log(success);
 		initMap({coords: {latitude: success.results[1].geometry.location.lat, longitude: success.results[1].geometry.location.lng}});
   		
