@@ -16,7 +16,6 @@ var uniqueId = function() {
 var apiKey = 'AIzaSyA5BnwOyRRQPu5ZkXibCqqFIibHlzBOunM';
 var lat = 43.6532;
 var lng = -79.3832;
-var protocol = window.location.protocol;
 
 function browserGeolocationSuccess(position) {
 	//get the nearest intersection
@@ -186,7 +185,7 @@ function addWormhole(position,d) {
         var markerPos2 = {coords :{ latitude: newY, longitude: newX}};
         
 	var image = {
-        url: 'https://bythegram.ca/superstreetview/icons/rocket.gif',
+        url: 'icons/rocket.gif',
         };
 
         var workMarker = new google.maps.Marker({
@@ -197,7 +196,7 @@ function addWormhole(position,d) {
         var workMarkersml= new google.maps.Marker({
             position: markerPos,
             map: map,
-	    icon: 'https://bythegram.ca/superstreetview/icons/crystalgreen.png',
+	    icon: 'icons/crystalgreen.png',
         });
 	
 	//marker.setPosition(markerPos);
@@ -228,10 +227,17 @@ function addWormhole(position,d) {
 			
 			$('#pano').css('pointer-events', 'none');
 			
-			jQuery.post(protocol + "/superstreetview/json.php", function(success) {
-				console.log(success);	
-				var json = JSON.parse(success);	
-				
+			jQuery.getJSON('collections_en.json', function(data) {
+				// data['1'] is the array of location collections;
+				// each entry's title is at ['1'], and lat/lng coords are at ['5']['2']['3']['1']/['2']
+				var locations = data['1'];
+				var rand = locations[Math.floor(Math.random() * locations.length)];
+				var json = [{
+					lat: rand['5']['2']['3']['1'],
+					lng: rand['5']['2']['3']['2'],
+					title: rand['1']
+				}];
+
 				map.setCenter({lat: json[0].lat, lng: json[0].lng});
                         	panorama.setPosition({lat: json[0].lat, lng: json[0].lng});
                         	var newPos = {coords: {latitude: json[0].lat, longitude: json[0].lng}};
@@ -245,6 +251,8 @@ function addWormhole(position,d) {
                         	addWormhole(newPos,1);
 			
 
+			}).fail(function() {
+				$('#pano').css('pointer-events', 'inherit');
 			});
 			
 			$('#pano').css('pointer-events', 'inherit');
@@ -278,7 +286,7 @@ function addBunch(position) {
         var markerPos2 = {coords :{ latitude: newY, longitude: newX}};
 
         var image = {
-	url: 'https://bythegram.ca/superstreetview/icons/diamond.gif',
+	url: 'icons/diamond.gif',
         };
     
 	var id = uniqueId(); // get new id
@@ -291,7 +299,7 @@ function addBunch(position) {
         var coinMarkersml = new google.maps.Marker({
 	    position: markerPos,
             map: map,
-	    icon: 'https://bythegram.ca/superstreetview/icons/crystalblue.png',
+	    icon: 'icons/crystalblue.png',
         });
 
     	coins[id] = coinMarker;
