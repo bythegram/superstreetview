@@ -1,7 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -21,33 +22,54 @@
     <script type="module" src="/src/main.js"></script>
   </head>
   <body>
-    <div id="floating-panel" class="level1">
-      <div id="map"></div>
+    <!-- Skip navigation for keyboard users -->
+    <a href="#pano" class="skip-link">Skip to game</a>
+
+    <div id="floating-panel" class="level1" role="complementary" aria-label="Game status">
+      <div id="map" aria-hidden="true"></div>
 
       <div class="text-left">
         <span class="holder">
-          <i class="fal fa-gem small"></i> <span id="score" data-score="0">0</span>
-          <span id="plusOne" class="addOne"><i class="fal fa-gem small"></i> +1</span>
+          <i class="fal fa-gem small" aria-hidden="true"></i>
+          <span class="sr-only">Score:</span>
+          <span id="score" data-score="0" role="status" aria-live="polite" aria-atomic="true"
+            >0</span
+          >
+          <span id="plusOne" class="addOne" aria-hidden="true"
+            ><i class="fal fa-gem small" aria-hidden="true"></i> +1</span
+          >
         </span>
         <span class="holder d-none">
-          <i class="fa fa-user small"></i> <span id="lives">1</span>
-          <span id="plusLive" class="addOne"><i class="fa fa-user small"></i> +1</span>
+          <i class="fa fa-user small" aria-hidden="true"></i>
+          <span class="sr-only">Lives:</span>
+          <span id="lives">1</span>
+          <span id="plusLive" class="addOne" aria-hidden="true"
+            ><i class="fa fa-user small" aria-hidden="true"></i> +1</span
+          >
         </span>
       </div>
       <div class="text-right">
-        <i class="fal fa-stopwatch small"></i>
-        <span id="time" data-time="0"><i class="fal fa-infinity"></i></span>
-        <button id="end-game-btn" title="End game">
-          <i class="fal fa-times-circle small"></i>
+        <i class="fal fa-stopwatch small" aria-hidden="true"></i>
+        <span id="time" data-time="0" role="timer" aria-label="Time remaining"
+          ><i class="fal fa-infinity" aria-hidden="true"></i
+          ><span class="sr-only">Unlimited</span></span
+        >
+        <button id="end-game-btn" aria-label="End game">
+          <i class="fal fa-times-circle small" aria-hidden="true"></i>
         </button>
       </div>
-      <div id="title-alert"></div>
+      <div id="title-alert" aria-live="assertive" aria-atomic="true"></div>
     </div>
-    <div id="pano"></div>
-    <div id="gameover">
+    <div
+      id="pano"
+      role="application"
+      aria-label="Street View game area. Use arrow keys or click to look around."
+      tabindex="0"
+    ></div>
+    <div id="gameover" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
       <div class="vert_wrapper">
         <div class="vert_cell">
-          <h1>Game Over!</h1>
+          <h1 id="gameover-title">Game Over!</h1>
           <h2>Your High Score Was <span id="highscore">0</span></h2>
           <p>
             Did you enjoy the game? Did it break or not work as you expected? I'd love to hear your
