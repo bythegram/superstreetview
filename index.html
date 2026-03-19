@@ -39,8 +39,54 @@
 		<p>Curious about how I built it or want to help out? Fill out the form on the link above and be sure to include your Bitbucket user name, I'll add you to the repository! For now the repo will remain private but I'll open it up once I'm 100% with the code</p>
 		<p>Thank you for playing!</p>
     </div></div></div>
+    <!--
+      Local/development usage:
+      - Option 1: Append ?gmaps_key=YOUR_GOOGLE_MAPS_API_KEY to the URL when opening index.html.
+      - Option 2: In the browser console, run:
+            localStorage.setItem('GOOGLE_MAPS_API_KEY', 'YOUR_GOOGLE_MAPS_API_KEY');
+      The script below will replace GOOGLE_MAPS_API_KEY_PLACEHOLDER in the Maps API URL
+      with the provided key at runtime. In production, any deploy-time replacement of
+      GOOGLE_MAPS_API_KEY_PLACEHOLDER will continue to work as before.
+    -->
+    <script>
+      (function () {
+        // Find the Google Maps script tag that still contains the placeholder key.
+        var mapsScript = document.querySelector('script[src*="GOOGLE_MAPS_API_KEY_PLACEHOLDER"]');
+        if (!mapsScript) {
+          return;
+        }
+
+        var key = null;
+        try {
+          // Prefer URL parameter "gmaps_key" for one-off runs: index.html?gmaps_key=YOUR_KEY
+          if (typeof URLSearchParams !== 'undefined') {
+            var params = new URLSearchParams(window.location.search);
+            key = params.get('gmaps_key');
+          }
+          // Fallback to localStorage if no key was provided via query parameter.
+          if (!key && window.localStorage) {
+            key = window.localStorage.getItem('GOOGLE_MAPS_API_KEY');
+          }
+        } catch (e) {
+          // If anything goes wrong (e.g., access restrictions), leave the placeholder as-is.
+        }
+
+        if (!key) {
+          // No development key provided; the placeholder remains, relying on deploy-time replacement.
+          return;
+        }
+
+        // Replace the placeholder in the script src with the provided key.
+        mapsScript.src = mapsScript.src.replace('GOOGLE_MAPS_API_KEY_PLACEHOLDER', encodeURIComponent(key));
+
+        // Also override the apiKey global used by game.js for Geocoding/Geolocation calls.
+        if (typeof window.apiKey !== 'undefined') {
+          window.apiKey = key;
+        }
+      })();
+    </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5BnwOyRRQPu5ZkXibCqqFIibHlzBOunM&callback=getLocation">
+    src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY_PLACEHOLDER&callback=getLocation">
     </script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
