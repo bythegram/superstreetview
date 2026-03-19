@@ -37,7 +37,7 @@ This document describes the automated agent capabilities available for the **Sup
 
 **Trigger:** Manual or scheduled weekly.  
 **What it does:**
-- Parses CDN URLs in `index.html` (jQuery, Font Awesome, Google Fonts) and resolves them to versioned package identifiers.
+- Parses CDN URLs in `index.html` (Font Awesome, Google Fonts) and resolves them to versioned package identifiers.
 - Queries the [GitHub Advisory Database](https://github.com/advisories) for known CVEs in those versions.
 - Checks whether Subresource Integrity (`integrity=`) attributes are present on all external `<script>` and `<link>` tags.
 
@@ -105,7 +105,7 @@ This document describes the automated agent capabilities available for the **Sup
 | `addWormhole(position, d)` | `position` – position object; `d` – radius in metres | Places a rocket marker on the panorama and mini-map. On click, teleports the player to a random Street View location. |
 | `addBunch(position)` | `position` – position object | Places a diamond marker. On click, increments the score and spawns three new diamonds nearby. |
 | `upScore()` | – | Increments the score, updates `localStorage`, checks for a level-up, and spawns new rocket markers when a level is reached. |
-| `startTimer(duration, display)` | `duration` – seconds; `display` – jQuery element | Countdown timer (currently commented out). Decrements remaining time and triggers Game Over when time runs out and no lives remain. |
+| `startTimer(duration, display)` | `duration` – seconds; `display` – DOM element | Countdown timer (currently commented out). Decrements remaining time and triggers Game Over when time runs out and no lives remain. |
 | `clearMarkers()` | – | Removes all rocket markers from the map and panorama. |
 | `clearCoin(id)` | `id` – integer | Removes a specific diamond marker by its array index. |
 | `setMapOnAll(map)` | `map` – google.maps.Map or null | Helper that sets (or unsets) the map for every rocket marker and its mini-map counterpart. |
