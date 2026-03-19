@@ -91,6 +91,11 @@ body {
   float: right;
   clear: none;
 }
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 #gameover {
   display: none;
   width: 100%;
@@ -138,8 +143,7 @@ body {
   font-size: inherit;
   cursor: pointer;
   padding: 0 0 0 8px;
-  vertical-align: middle;
-  opacity: 0.7;
+  display: flex;
 }
 #end-game-btn:hover {
   opacity: 1;
