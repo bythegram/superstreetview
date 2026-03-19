@@ -16,6 +16,11 @@ import { addWormhole, addBunch } from './markers.js';
  * @param {{ coords: { latitude: number, longitude: number } }} position
  */
 export function initMap(position) {
+  console.debug('[map] initMap() called with position:', {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+  });
+
   const scoreEl = document.getElementById('score');
   const localScore = localStorage.getItem('score');
 
@@ -28,6 +33,7 @@ export function initMap(position) {
   }
 
   state.firstCenter = { lat: position.coords.latitude, lng: position.coords.longitude };
+  console.debug('[map] firstCenter set to:', state.firstCenter);
 
   state.map = new google.maps.Map(document.getElementById('map'), {
     center: state.firstCenter,
@@ -46,6 +52,7 @@ export function initMap(position) {
     zoomControl: false,
     panControl: false,
   });
+  console.debug('[map] StreetViewPanorama created with position:', state.firstCenter);
 
   const oneMinute = 60;
   const display = document.getElementById('time');
@@ -64,6 +71,8 @@ export function initMap(position) {
   state.map.setStreetView(state.panorama);
 
   state.panorama.addListener('position_changed', function () {
+    const pos = state.panorama.getPosition();
+    console.debug('[map] panorama position_changed:', pos ? { lat: pos.lat(), lng: pos.lng() } : null);
     state.map.setCenter(state.panorama.getPosition());
   });
 
