@@ -83,9 +83,6 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - **Add a `Content-Security-Policy` header**  
   Restrict which origins can load scripts, styles, and images by setting a strict CSP meta tag or HTTP header.
 
-- **Replace Google Analytics Universal Analytics (`ga()`)**  
-  UA (Universal Analytics) was sunset in July 2023. Migrate to Google Analytics 4 (`gtag.js`) or a privacy-respecting alternative such as [Plausible](https://plausible.io/) or [Fathom](https://usefathom.com/).
-
 ---
 
 ## ✅ Best Practices Checklist
@@ -101,7 +98,7 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | `localStorage` score reset on new game | ✅ Done |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
 | `Content-Security-Policy` header set | ❌ TODO |
-| Google Analytics 4 (replace UA) | ❌ TODO |
+| Google Analytics 4 (replace UA) | ✅ Done |
 | PWA manifest + service worker | ❌ TODO |
 | README with setup instructions | ✅ Done |
 | `.gitignore` present | ✅ Done |
