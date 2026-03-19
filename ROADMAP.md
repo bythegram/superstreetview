@@ -72,8 +72,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - **Multiplayer / leaderboard support**  
   The score is stored only in `localStorage`. Adding a lightweight backend (e.g., a serverless function + database) to record and display high scores globally would increase engagement.
 
-- **Accessibility improvements**  
-  The game currently has no ARIA labels, keyboard navigation, or colour-contrast compliance. Add semantic HTML, `aria-live` regions for score updates, and ensure at least WCAG 2.1 AA colour contrast on all text.
+- ✅ **Accessibility improvements**  
+  Added `lang="en"` and `<meta name="viewport">` to the HTML document; a skip-navigation link for keyboard users; semantic `role` attributes (`complementary`, `application`, `dialog`, `timer`, `status`); `aria-live` regions for score updates and location alerts; `aria-modal` and focus management for the game-over dialog; `aria-hidden` on all decorative icons; a `.sr-only` utility class for visually hidden labels; WCAG 2.1 AA colour-contrast fixes (restart button changed from white to black text on `#00ff66`; dark semi-transparent background added to the HUD panel so `#00ff66` text is readable over variable Street View imagery); and `:focus-visible` outlines on all interactive elements.
 
 - **Progressive Web App (PWA)**  
   Add a `manifest.json` and a service worker so the game can be installed to the home screen and caches assets for offline play.
@@ -107,3 +107,4 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | `.gitignore` present | ✅ Done |
 | Open-source license declared | ❌ TODO |
 | jQuery removed (vanilla JS) | ✅ Done |
+| Accessibility (ARIA, keyboard nav, WCAG AA contrast) | ✅ Done |

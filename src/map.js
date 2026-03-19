@@ -100,6 +100,8 @@ export function showGameOver() {
     highscoreEl.textContent = currentScore;
   }
   document.getElementById('gameover').style.display = 'block';
+  // Move focus into the dialog so keyboard/AT users can interact with it
+  document.getElementById('restart-btn').focus();
 }
 
 /**
@@ -170,4 +172,7 @@ export function restartGame() {
   for (let i = 1; i < 9; i++) {
     addBunch(state.origPos);
   }
+
+  // Return focus to the game area for keyboard/AT users
+  document.getElementById('pano').focus();
 }
