@@ -32,17 +32,37 @@ jobs:
           GOOGLE_MAPS_BROWSER_API_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_API_KEY }}
         run: |
           python3 - <<'EOF'
-          import os
+          import os, sys
+
           # This is a Google Maps browser API key; it will be embedded in the
           # deployed index.html/game.js and must be protected via strict HTTP
           # referrer restrictions in Google Cloud Console, not by secrecy.
-          key = os.environ['GOOGLE_MAPS_BROWSER_API_KEY']
+          key = os.environ.get('GOOGLE_MAPS_BROWSER_API_KEY', '')
+          if not key:
+              print(
+                  "ERROR: The GOOGLE_MAPS_BROWSER_API_KEY secret is not set.\n"
+                  "Go to Settings → Secrets and Variables → Actions and add a\n"
+                  "secret named GOOGLE_MAPS_BROWSER_API_KEY with your Maps API key.",
+                  file=sys.stderr
+              )
+              sys.exit(1)
+
+          placeholder = 'GOOGLE_MAPS_API_KEY_PLACEHOLDER'
           for filename in ['index.html', 'game.js']:
               with open(filename, 'r') as f:
                   content = f.read()
-              content = content.replace('GOOGLE_MAPS_API_KEY_PLACEHOLDER', key)
+              count = content.count(placeholder)
+              if count == 0:
+                  print(
+                      f"ERROR: placeholder '{placeholder}' not found in {filename}. "
+                      "The file may have been modified incorrectly.",
+                      file=sys.stderr
+                  )
+                  sys.exit(1)
+              content = content.replace(placeholder, key)
               with open(filename, 'w') as f:
                   f.write(content)
+              print(f"Replaced {count} occurrence(s) of placeholder in {filename}.")
           EOF
 
       - name: Upload artifact

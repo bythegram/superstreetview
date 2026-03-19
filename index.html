@@ -78,6 +78,11 @@
 
         // Replace the placeholder in the script src with the provided key.
         mapsScript.src = mapsScript.src.replace('GOOGLE_MAPS_API_KEY_PLACEHOLDER', encodeURIComponent(key));
+
+        // Also override the apiKey global used by game.js for Geocoding/Geolocation calls.
+        if (typeof window.apiKey !== 'undefined') {
+          window.apiKey = key;
+        }
       })();
     </script>
     <script async defer
