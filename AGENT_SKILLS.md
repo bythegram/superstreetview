@@ -10,7 +10,7 @@ This document describes the automated agent capabilities available for the **Sup
 
 **Trigger:** Open a pull request or run the review agent manually.  
 **What it does:**
-- Analyses `game.js`, `style.css`, `index.html`, and `json.php` for code-quality issues.
+- Analyses `game.js`, `style.css`, and `index.html` for code-quality issues.
 - Flags undeclared variables, dead code, unused variables, and implicit globals.
 - Checks for exposed credentials or API keys.
 - Verifies that `let`/`const` is preferred over `var`.
@@ -25,9 +25,9 @@ This document describes the automated agent capabilities available for the **Sup
 **Trigger:** Runs automatically on every push; can also be triggered manually.  
 **What it does:**
 - Scans source files for hardcoded secrets, API keys, and tokens using pattern matching.
-- Checks PHP files for unsafe `file_get_contents` calls on remote URLs, missing output sanitisation, and missing `Content-Type` headers.
 - Verifies that no credentials appear in `.gitignore`-excluded files that have accidentally been committed.
 - Checks `index.html` for missing `Content-Security-Policy` meta tags.
+- Verifies that the Google Maps API key is domain-restricted in Google Cloud Console.
 
 **Output:** A security report listing each finding with its file, line, and recommended remediation.
 
@@ -78,6 +78,19 @@ This document describes the automated agent capabilities available for the **Sup
 - Checks whether images in `icons/` can be converted to a more efficient format (e.g., WebP instead of GIF/PNG).
 
 **Output:** A performance report with current vs. optimised asset sizes and actionable recommendations.
+
+---
+
+### 7. Documentation Updater
+
+**Trigger:** Required on every pull request or code change; can also be run manually.  
+**What it does:**
+- Reviews all changes made to source files (`game.js`, `index.html`, `style.css`, `collections_en.json`, etc.).
+- Updates `README.md` to reflect any changes to the tech stack, project structure, prerequisites, or setup steps.
+- Updates `ROADMAP.md` to mark completed items (✅), revise in-progress items, and add new items based on changes or issues introduced by the code change.
+- Ensures that both documents are accurate and consistent with the current state of the codebase after every commit.
+
+**Output:** Updated `README.md` and/or `ROADMAP.md` committed alongside (or immediately after) the code change.
 
 ---
 

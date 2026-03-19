@@ -18,7 +18,7 @@ A browser-based exploration game built on top of Google Maps Street View. Player
 | Icons | [Font Awesome Pro 5.13](https://fontawesome.com/) |
 | Font | [Roboto Mono – Google Fonts](https://fonts.google.com/specimen/Roboto+Mono) |
 | Analytics | Google Analytics (UA) |
-| Backend (location data) | PHP (`json.php`) serving data from `collections_en.json` |
+| Location data | `collections_en.json` (bundled locally, fetched directly by the client) |
 
 ## Project Structure
 
@@ -27,8 +27,7 @@ superstreetview/
 ├── index.html          # Main HTML shell
 ├── game.js             # All game logic (map init, markers, scoring, timer)
 ├── style.css           # All styling
-├── json.php            # PHP endpoint – picks a random Street View location
-├── collections_en.json # Dataset of curated Street View locations
+├── collections_en.json # Dataset of curated Street View locations (loaded directly by the client)
 └── icons/              # Sprite & icon assets (GIFs and PNGs)
     ├── rocket.gif
     ├── diamond.gif
@@ -41,8 +40,8 @@ superstreetview/
 
 ### Prerequisites
 
-- A web server that can serve PHP (e.g. [MAMP](https://www.mamp.info/), [XAMPP](https://www.apachefriends.org/), or `php -S localhost:8000`).
-- A [Google Maps Platform](https://console.cloud.google.com/) project with the **Maps JavaScript API** and **Geocoding API** enabled, and a valid API key.
+- A static file server or any web server (e.g. `python3 -m http.server 8000`, [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer), or similar). No PHP is required.
+- A [Google Maps Platform](https://console.cloud.google.com/) project with the **Maps JavaScript API** and **Geocoding API** enabled, and a valid API key restricted to your deployment domain.
 
 ### Steps
 
@@ -57,11 +56,11 @@ superstreetview/
    // game.js line 16
    var apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
    ```
-   > ⚠️ **Never commit a real API key to source control.** See the [ROADMAP](ROADMAP.md) for the recommended approach using environment variables.
+   > ⚠️ **Restrict your API key** in Google Cloud Console to your deployment domain (e.g. your GitHub Pages URL) to prevent unauthorised use. See the [ROADMAP](ROADMAP.md) for additional security recommendations.
 
-3. Start a local PHP server:
+3. Start a local static server:
    ```bash
-   php -S localhost:8000
+   python3 -m http.server 8000
    ```
 
 4. Open `http://localhost:8000` in your browser.

@@ -8,13 +8,11 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 ### Critical
 
-- **Exposed API key** (`game.js` line 16 & `index.html` line 43)  
-  The Google Maps API key is hardcoded in source code and committed to the repository. This allows anyone who views the source to abuse the key and run up billing charges.  
-  _Fix:_ Load the key from a server-side environment variable or a build-time `.env` file and inject it at page-render time. Restrict the key in Google Cloud Console to specific referrer domains.
+- ✅ **Exposed API key** (`game.js` line 16 & `index.html` line 43) — _Resolved_  
+  The Google Maps API key has been locked down in Google Cloud Console to only accept requests from the GitHub Pages URL, preventing unauthorised use from other origins.
 
-- **`json.php` fetches raw remote data without validation**  
-  The PHP backend blindly fetches `collections_en.json` from an external URL, decodes it, and echoes it back without sanitising the output. A compromised or changed upstream file could serve arbitrary data.  
-  _Fix:_ Bundle `collections_en.json` locally, serve it directly, and add `Content-Type: application/json` plus `JSON_THROW_ON_ERROR` to the decode call.
+- ✅ **`json.php` fetches raw remote data without validation** — _Resolved_  
+  The PHP backend has been removed entirely. `collections_en.json` is now bundled locally in the repository and loaded directly by the client via `jQuery.getJSON('collections_en.json', ...)`, eliminating the server-side vulnerability.
 
 ### Medium
 
@@ -93,16 +91,13 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - **Replace Google Analytics Universal Analytics (`ga()`)**  
   UA (Universal Analytics) was sunset in July 2023. Migrate to Google Analytics 4 (`gtag.js`) or a privacy-respecting alternative such as [Plausible](https://plausible.io/) or [Fathom](https://usefathom.com/).
 
-- **Rate-limit `json.php`**  
-  The PHP endpoint is unauthenticated and has no rate limiting. Add IP-based throttling or move the location-selection logic to the client to avoid server-side abuse.
-
 ---
 
 ## ✅ Best Practices Checklist
 
 | Practice | Status |
 |---|---|
-| API keys stored in environment variables, not source | ❌ TODO |
+| API keys stored in environment variables, not source | ⚠️ Partial – key restricted to GitHub Pages referrer domain |
 | `let`/`const` instead of `var` | ❌ TODO |
 | ESLint + Prettier configured | ❌ TODO |
 | No unused variables | ❌ TODO |
