@@ -81,6 +81,25 @@ export function initMap(position) {
   state.map.setOptions({ styles });
 
   document.getElementById('restart-btn').addEventListener('click', restartGame);
+  document.getElementById('end-game-btn').addEventListener('click', showGameOver);
+}
+
+/**
+ * Show the Game Over overlay.
+ *
+ * Syncs the high-score display with the current score and reveals the overlay.
+ * Called automatically when the timer expires, or manually via the end-game
+ * button while the timer is disabled.
+ */
+export function showGameOver() {
+  const scoreEl = document.getElementById('score');
+  const highscoreEl = document.getElementById('highscore');
+  const currentScore = parseInt(scoreEl.dataset.score, 10);
+  const storedHigh = parseInt(highscoreEl.textContent, 10);
+  if (currentScore > storedHigh) {
+    highscoreEl.textContent = currentScore;
+  }
+  document.getElementById('gameover').style.display = 'block';
 }
 
 /**
