@@ -5,7 +5,6 @@
  * commented) and is preserved here for a future fix – see ROADMAP.md.
  */
 
-// eslint-disable-next-line no-unused-vars
 export function startTimer(_duration, _display) {
   /*
    * TODO: Restore timer logic (see ROADMAP.md – "Timer is entirely commented out").

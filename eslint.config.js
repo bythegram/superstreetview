@@ -13,6 +13,9 @@ export default [
         google: 'readonly',
       },
     },
+    rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
   },
   prettierConfig,
 ];
