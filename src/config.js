@@ -11,6 +11,6 @@
  */
 export const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
 
-/** Default map centre (Toronto, Canada) used when geolocation is unavailable. */
-export const DEFAULT_LAT = 43.6532;
-export const DEFAULT_LNG = -79.3832;
+/** Default map centre (Toronto City Hall) used when geolocation is unavailable. */
+export const DEFAULT_LAT = 43.653608;
+export const DEFAULT_LNG = -79.384293;
