@@ -136,6 +136,7 @@ body {
   outline: 3px solid #005c24;
   outline-offset: 2px;
 }
+#find-me-btn,
 #end-game-btn {
   background: none;
   border: none;
@@ -145,9 +146,11 @@ body {
   padding: 0 0 0 8px;
   display: flex;
 }
+#find-me-btn:hover,
 #end-game-btn:hover {
   opacity: 1;
 }
+#find-me-btn:focus-visible,
 #end-game-btn:focus-visible {
   outline: 2px solid #00ff66;
   outline-offset: 2px;
