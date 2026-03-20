@@ -176,9 +176,7 @@ function findMeGeolocationSuccess(position) {
           },
         });
       } else {
-        console.warn(
-          '[geolocation] Find Me: no usable geocode result; using raw coordinates.'
-        );
+        console.warn('[geolocation] Find Me: no usable geocode result; using raw coordinates.');
         relocate({
           coords: {
             latitude: position.coords.latitude,
