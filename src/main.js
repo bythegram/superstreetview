@@ -6,7 +6,7 @@
  */
 
 import { apiKey, DEFAULT_LAT, DEFAULT_LNG } from './config.js';
-import { initMap } from './map.js';
+import { initMap, relocate } from './map.js';
 import { registerTiltListener } from './movement.js';
 
 // ---------------------------------------------------------------------------
@@ -142,11 +142,118 @@ function getLocation() {
 }
 
 // ---------------------------------------------------------------------------
+// Find Me
+// ---------------------------------------------------------------------------
+
+function findMeGeolocationSuccess(position) {
+  console.debug('[geolocation] Find Me: browser geolocation succeeded.', {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+    accuracy: position.coords.accuracy,
+  });
+
+  const geocodeUrl =
+    'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+    position.coords.latitude +
+    ',' +
+    position.coords.longitude +
+    '&key=' +
+    apiKey;
+  console.debug(
+    '[geolocation] Find Me: fetching reverse-geocode:',
+    geocodeUrl.replace(apiKey, '<redacted>')
+  );
+
+  fetch(geocodeUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      const result = data.results && data.results[0];
+      if (result && result.geometry && result.geometry.location) {
+        relocate({
+          coords: {
+            latitude: result.geometry.location.lat,
+            longitude: result.geometry.location.lng,
+          },
+        });
+      } else {
+        console.warn(
+          '[geolocation] Find Me: no usable geocode result; using raw coordinates.'
+        );
+        relocate({
+          coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+        });
+      }
+    })
+    .catch((err) => {
+      console.error('[geolocation] Find Me: geocode fetch failed; using raw coordinates.', err);
+      relocate({
+        coords: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        },
+      });
+    });
+}
+
+function findMeGeolocationFail(error) {
+  console.warn('[geolocation] Find Me: browser geolocation failed.', {
+    code: error && error.code,
+    message: error && error.message,
+  });
+  const titleAlert = document.getElementById('title-alert');
+  if (titleAlert) {
+    titleAlert.textContent = 'Location unavailable';
+    titleAlert.style.display = 'block';
+    setTimeout(() => {
+      titleAlert.textContent = '';
+      titleAlert.style.display = 'none';
+    }, 3000);
+  }
+}
+
+/**
+ * Request the device's current position and move the game to that location.
+ * Exposed on `window` so the find-me button wired in map.js can call it.
+ */
+function findMe() {
+  console.debug('[geolocation] findMe() called — requesting current position.');
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      findMeGeolocationSuccess,
+      findMeGeolocationFail,
+      options
+    );
+  } else {
+    console.warn('[geolocation] findMe: navigator.geolocation is not available.');
+    const titleAlert = document.getElementById('title-alert');
+    if (titleAlert) {
+      titleAlert.textContent = 'Geolocation not supported';
+      titleAlert.style.display = 'block';
+      setTimeout(() => {
+        titleAlert.textContent = '';
+        titleAlert.style.display = 'none';
+      }, 3000);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Bootstrap
 // ---------------------------------------------------------------------------
 
 // Expose getLocation globally so the Maps API `callback=getLocation` works.
 window.getLocation = getLocation;
+
+// Expose findMe globally so the find-me button wired in map.js can call it.
+window.findMe = findMe;
 
 // Register device-orientation listeners for mobile tilt-to-move.
 registerTiltListener();

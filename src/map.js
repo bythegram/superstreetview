@@ -94,6 +94,9 @@ export function initMap(position) {
 
   document.getElementById('restart-btn').addEventListener('click', restartGame);
   document.getElementById('end-game-btn').addEventListener('click', showGameOver);
+  document.getElementById('find-me-btn').addEventListener('click', function () {
+    if (typeof window.findMe === 'function') window.findMe();
+  });
 }
 
 /**
@@ -187,4 +190,61 @@ export function restartGame() {
 
   // Return focus to the game area for keyboard/AT users
   document.getElementById('pano').focus();
+}
+
+/**
+ * Move the game to a new location without resetting the score or timer.
+ *
+ * Clears all existing markers and re-seeds them around `position`, then
+ * repositions the Street View panorama and the mini-map.  Used by the
+ * "Find Me" button to move the player to their detected real-world location
+ * mid-game.
+ *
+ * @param {{ coords: { latitude: number, longitude: number } }} position
+ */
+export function relocate(position) {
+  const newCenter = { lat: position.coords.latitude, lng: position.coords.longitude };
+  console.debug('[map] relocate() called with position:', newCenter);
+
+  // Update stored location so restart/wormhole-return uses the new origin.
+  state.firstCenter = newCenter;
+  state.origPos = position;
+
+  // Remove all rocket markers from both layers.
+  for (let i = 0; i < markers.length; i++) {
+    if (markers[i]) markers[i].setMap(null);
+    if (smlMarkers[i]) smlMarkers[i].setMap(null);
+  }
+  markers.length = 0;
+  smlMarkers.length = 0;
+
+  // Remove all coin markers from both layers.
+  for (let i = 0; i < coins.length; i++) {
+    if (coins[i]) coins[i].setMap(null);
+    if (smlCoins[i]) smlCoins[i].setMap(null);
+  }
+  coins.length = 0;
+  smlCoins.length = 0;
+
+  // Clear any out-of-bounds state.
+  document.getElementById('score').classList.remove('outta');
+  document.getElementById('time').classList.remove('pauseInterval');
+
+  // Hide the location title alert if it was showing.
+  const titleAlert = document.getElementById('title-alert');
+  titleAlert.textContent = '';
+  titleAlert.style.display = 'none';
+
+  // Move the panorama and mini-map to the new location.
+  state.panorama.setPosition(newCenter);
+  state.map.setCenter(newCenter);
+
+  // Re-seed rockets and diamonds around the new location.
+  for (let i = 1; i < 8; i++) {
+    const rand = Math.floor(Math.random() * 10) + 1;
+    addWormhole(state.origPos, rand * 100);
+  }
+  for (let i = 1; i < 9; i++) {
+    addBunch(state.origPos);
+  }
 }
