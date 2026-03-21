@@ -74,13 +74,13 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - ✅ **Accessibility improvements**  
   Added `lang="en"` and `<meta name="viewport">` to the HTML document; a skip-navigation link for keyboard users; semantic `role` attributes (`complementary`, `application`, `dialog`, `timer`, `status`); `aria-live` regions for score updates and location alerts; `aria-modal` and focus management for the game-over dialog; `aria-hidden` on all decorative icons; a `.sr-only` utility class for visually hidden labels; WCAG 2.1 AA colour-contrast fixes (restart button changed from white to black text on `#00ff66`; dark semi-transparent background added to the HUD panel so `#00ff66` text is readable over variable Street View imagery); and `:focus-visible` outlines on all interactive elements.
 
-- **Progressive Web App (PWA)**  
-  Add a `manifest.json` and a service worker so the game can be installed to the home screen and caches assets for offline play.
+- ✅ **Progressive Web App (PWA)**  
+  Added `public/manifest.json` (name, icons, theme colour, display mode) and `public/sw.js` (cache-first service worker that pre-caches the app shell and caches same-origin assets on demand). The service worker is registered in `src/main.js` on the `load` event. Two PNG app icons (192 × 192 and 512 × 512) were added under `public/icons/`.
 
 ### Security & Privacy
 
-- **Add a `Content-Security-Policy` header**  
-  Restrict which origins can load scripts, styles, and images by setting a strict CSP meta tag or HTTP header.
+- ✅ **Add a `Content-Security-Policy` header**  
+  A `<meta http-equiv="Content-Security-Policy">` tag was added to `index.html`. It sets `default-src 'self'` and adds explicit allowlists for Google Maps, Google Fonts, and Font Awesome (the only required external origins). `object-src 'none'`, `base-uri 'self'`, and `form-action 'self'` are included to block the most common injection vectors.
 
 ---
 
@@ -96,9 +96,9 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | Restart / play again button on Game Over screen | ✅ Done |
 | `localStorage` score reset on new game | ✅ Done |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
-| `Content-Security-Policy` header set | ❌ TODO |
+| `Content-Security-Policy` header set | ✅ Done |
 | Google Analytics 4 (replace UA) | ✅ Done |
-| PWA manifest + service worker | ❌ TODO |
+| PWA manifest + service worker | ✅ Done |
 | README with setup instructions | ✅ Done |
 | `.gitignore` present | ✅ Done |
 | Open-source license declared | ❌ TODO |
