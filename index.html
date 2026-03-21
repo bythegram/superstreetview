@@ -3,10 +3,47 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Content-Security-Policy
+      • default-src 'self'  — block everything not explicitly listed.
+      • script-src          — only our own bundle + the Google Maps JS API.
+      • style-src           — our own styles + Google Fonts + Font Awesome CSS;
+                              'unsafe-inline' is required because the Maps JS API
+                              injects inline styles at runtime.
+      • img-src             — our own icons + Google Maps tiles / Street View
+                              imagery (*.googleapis.com, *.gstatic.com, *.google.com)
+                              plus data: and blob: for canvas-derived images.
+      • font-src            — Google Fonts webfonts + Font Awesome Pro webfonts.
+      • connect-src         — fetch() calls to Google Geocoding & Geolocation APIs.
+      • worker-src 'self'   — allows sw.js to be registered as a service worker.
+      • frame-src           — Street View uses a Google-hosted iframe.
+      • object-src 'none'   — disallow Flash / plugins entirely.
+      • base-uri 'self'     — prevent <base href> injection attacks.
+      • form-action 'self'  — prevent form hijacking.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' maps.googleapis.com;
+        style-src 'self' 'unsafe-inline' fonts.googleapis.com pro.fontawesome.com;
+        img-src 'self' data: blob: *.googleapis.com *.gstatic.com *.google.com;
+        font-src 'self' fonts.gstatic.com pro.fontawesome.com;
+        connect-src 'self' maps.googleapis.com www.googleapis.com;
+        worker-src 'self';
+        frame-src *.google.com;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+      "
+    />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#07111f" />
     <title>Super Street View</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
     <link
       rel="stylesheet"
       href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css"
