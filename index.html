@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@100;300;400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" type="text/css" />
@@ -29,8 +29,10 @@
     <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
       <div class="vert_wrapper">
         <div class="vert_cell">
+          <p class="intro-eyebrow">MISSION BRIEFING</p>
           <h1 id="intro-title">Super Street View</h1>
-          <p class="intro-tagline">An exploration game powered by Google Street View</p>
+          <p class="intro-tagline">Explore Earth. Collect the Cosmos.</p>
+          <div class="intro-divider" aria-hidden="true"></div>
           <ul class="intro-list" aria-label="How to play">
             <li>
               <i class="fal fa-gem" aria-hidden="true"></i>
@@ -38,7 +40,7 @@
             </li>
             <li>
               <i class="fal fa-rocket" aria-hidden="true"></i>
-              Click <strong>rockets</strong> to teleport to a random location anywhere on Earth
+              Activate <strong>rockets</strong> to warp to a random location anywhere on Earth
             </li>
             <li>
               <i class="fal fa-level-up" aria-hidden="true"></i>
@@ -47,11 +49,11 @@
           </ul>
           <p class="intro-location-note">
             <i class="fal fa-location-arrow" aria-hidden="true"></i>
-            To start near your real-world location, this game will request access to your
-            browser&rsquo;s location.
+            To begin near your real-world coordinates, this game will request your browser&rsquo;s
+            location.
           </p>
           <button id="play-btn" aria-label="Share location and start the game">
-            <i class="fal fa-play" aria-hidden="true"></i> Play
+            <i class="fal fa-rocket" aria-hidden="true"></i> Launch
           </button>
         </div>
       </div>
@@ -104,14 +106,15 @@
     <div id="gameover" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
       <div class="vert_wrapper">
         <div class="vert_cell">
-          <h1 id="gameover-title">Game Over!</h1>
-          <h2>Your High Score Was <span id="highscore">0</span></h2>
-          <p>
+          <p class="gameover-eyebrow">SESSION ENDED</p>
+          <h1 id="gameover-title">Mission Complete</h1>
+          <h2>Final Score &mdash; <span id="highscore">0</span></h2>
+          <p class="gameover-sub">
             Curious about the creator? Check out the blog post
             <a href="http://bythegram.ca/blog/super-street-view-beta/">here</a>.
           </p>
-          <p>Thank you for playing!</p>
-          <button id="restart-btn">Play Again</button>
+          <p class="gameover-sub">Thank you for playing.</p>
+          <button id="restart-btn">New Mission</button>
         </div>
       </div>
     </div>
