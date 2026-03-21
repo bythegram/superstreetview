@@ -3,6 +3,9 @@
  *
  * Wires up geolocation and exposes `getLocation` as the Google Maps API
  * callback on `window` so the Maps script tag can invoke it once loaded.
+ *
+ * Geolocation is deferred until the user dismisses the intro screen so that
+ * the browser permission prompt appears in direct response to a user gesture.
  */
 
 import { apiKey, DEFAULT_LAT, DEFAULT_LNG } from './config.js';
@@ -10,7 +13,17 @@ import { initMap, relocate } from './map.js';
 import { registerTiltListener } from './movement.js';
 
 // ---------------------------------------------------------------------------
-// Geolocation
+// Flags that coordinate the Maps API ready callback with the Play button
+// ---------------------------------------------------------------------------
+
+/** Set to true once the Google Maps JS API has finished loading. */
+let mapsReady = false;
+
+/** Set to true once the user has clicked the Play button on the intro screen. */
+let userReady = false;
+
+// ---------------------------------------------------------------------------
+// Geolocation helpers
 // ---------------------------------------------------------------------------
 
 function browserGeolocationSuccess(position) {
@@ -115,10 +128,10 @@ function browserGeolocationFail(error) {
 
 /**
  * Request the device's current position and hand off to `initMap`.
- * Called automatically by the Google Maps JS API via `callback=getLocation`.
+ * Only called once both the Maps API is loaded *and* the user has clicked Play.
  */
-function getLocation() {
-  console.debug('[geolocation] getLocation() called — starting geolocation flow.');
+function startGeolocation() {
+  console.debug('[geolocation] startGeolocation() called — starting geolocation flow.');
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -138,6 +151,20 @@ function getLocation() {
         DEFAULT_LNG,
       }
     );
+    initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });
+  }
+}
+
+/**
+ * Called automatically by the Google Maps JS API via `callback=getLocation`.
+ * Marks the Maps API as ready and starts geolocation only if the user has
+ * already clicked Play; otherwise defers to the Play button handler.
+ */
+function getLocation() {
+  console.debug('[geolocation] getLocation() called — Maps API is ready.');
+  mapsReady = true;
+  if (userReady) {
+    startGeolocation();
   }
 }
 
@@ -255,3 +282,21 @@ window.findMe = findMe;
 
 // Register device-orientation listeners for mobile tilt-to-move.
 registerTiltListener();
+
+// ---------------------------------------------------------------------------
+// Intro screen — wire up the Play button
+// ---------------------------------------------------------------------------
+
+const playBtn = document.getElementById('play-btn');
+const introEl = document.getElementById('intro');
+
+if (playBtn && introEl) {
+  playBtn.addEventListener('click', () => {
+    console.debug('[intro] Play clicked — hiding intro and starting game.');
+    introEl.style.display = 'none';
+    userReady = true;
+    if (mapsReady) {
+      startGeolocation();
+    }
+  });
+}
