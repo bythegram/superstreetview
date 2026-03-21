@@ -11,6 +11,7 @@
 import { apiKey, DEFAULT_LAT, DEFAULT_LNG } from './config.js';
 import { initMap, relocate } from './map.js';
 import { registerTiltListener } from './movement.js';
+import { state } from './state.js';
 
 // ---------------------------------------------------------------------------
 // Flags that coordinate the Maps API ready callback with the Play button
@@ -191,12 +192,14 @@ function findMeGeolocationSuccess(position) {
     geocodeUrl.replace(apiKey, '<redacted>')
   );
 
+  const mapAction = state.map === null ? initMap : relocate;
+
   fetch(geocodeUrl)
     .then((response) => response.json())
     .then((data) => {
       const result = data.results && data.results[0];
       if (result && result.geometry && result.geometry.location) {
-        relocate({
+        mapAction({
           coords: {
             latitude: result.geometry.location.lat,
             longitude: result.geometry.location.lng,
@@ -204,7 +207,7 @@ function findMeGeolocationSuccess(position) {
         });
       } else {
         console.warn('[geolocation] Find Me: no usable geocode result; using raw coordinates.');
-        relocate({
+        mapAction({
           coords: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -214,7 +217,7 @@ function findMeGeolocationSuccess(position) {
     })
     .catch((err) => {
       console.error('[geolocation] Find Me: geocode fetch failed; using raw coordinates.', err);
-      relocate({
+      mapAction({
         coords: {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -228,6 +231,14 @@ function findMeGeolocationFail(error) {
     code: error && error.code,
     message: error && error.message,
   });
+  if (state.map === null) {
+    console.warn(
+      '[geolocation] Find Me: map not yet initialised; falling back to default coordinates.',
+      { DEFAULT_LAT, DEFAULT_LNG }
+    );
+    initMap({ coords: { latitude: DEFAULT_LAT, longitude: DEFAULT_LNG } });
+    return;
+  }
   const titleAlert = document.getElementById('title-alert');
   if (titleAlert) {
     titleAlert.textContent = 'Location unavailable';
@@ -296,7 +307,7 @@ if (playBtn && introEl) {
     introEl.style.display = 'none';
     userReady = true;
     if (mapsReady) {
-      startGeolocation();
+      findMe();
     }
   });
 }
