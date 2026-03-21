@@ -25,6 +25,38 @@
     <!-- Skip navigation for keyboard users -->
     <a href="#pano" class="skip-link">Skip to game</a>
 
+    <!-- Intro screen — shown on first load, hidden once Play is clicked -->
+    <div id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+      <div class="vert_wrapper">
+        <div class="vert_cell">
+          <h1 id="intro-title">Super Street View</h1>
+          <p class="intro-tagline">An exploration game powered by Google Street View</p>
+          <ul class="intro-list" aria-label="How to play">
+            <li>
+              <i class="fal fa-gem" aria-hidden="true"></i>
+              Collect <strong>diamonds</strong> scattered around the streets to earn points
+            </li>
+            <li>
+              <i class="fal fa-rocket" aria-hidden="true"></i>
+              Click <strong>rockets</strong> to teleport to a random location anywhere on Earth
+            </li>
+            <li>
+              <i class="fal fa-level-up" aria-hidden="true"></i>
+              Level up every <strong>10 points</strong> — markers appear farther away as you advance
+            </li>
+          </ul>
+          <p class="intro-location-note">
+            <i class="fal fa-location-arrow" aria-hidden="true"></i>
+            To start near your real-world location, this game will request access to your
+            browser&rsquo;s location.
+          </p>
+          <button id="play-btn" aria-label="Share location and start the game">
+            <i class="fal fa-play" aria-hidden="true"></i> Play
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="floating-panel" class="level1" role="complementary" aria-label="Game status">
       <div id="map" aria-hidden="true"></div>
 
