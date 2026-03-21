@@ -22,9 +22,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - ✅ **`addWormhole` declares `markerPos2` but never uses it** (`game.js` line 186) — _Resolved_  
   Removed the unused `markerPos2` declaration from `addWormhole`.
 
-- **Timer is entirely commented out** (`game.js` lines 363–399)  
-  The countdown timer that enforces a time-limit per life is disabled, making the game infinite and removing any urgency.  
-  _Fix:_ Restore the timer logic, test the lives/game-over flow end-to-end, then remove the dead comment block.
+- ✅ **Timer is entirely commented out** (`game.js` lines 363–399) — _Resolved_  
+  The countdown timer has been restored in `src/timer.js`. The interval now ticks every second, deducting a life on expiry (or returning the player to origin if out-of-bounds), and shows the game-over overlay when lives reach zero.
 
 - ✅ **`upScore` reads `#highscore` and checks `(highScore + 1) % 10`** (`game.js` line 329) — _Resolved_  
   The condition now uses `newScore % 10 === 0`, triggering level-up correctly every 10 points scored in the current session.
@@ -93,7 +92,7 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | `let`/`const` instead of `var` | ✅ Done |
 | ESLint + Prettier configured | ✅ Done |
 | No unused variables | ✅ Done |
-| Timer and lives system fully working | ❌ TODO |
+| Timer and lives system fully working | ✅ Done |
 | Restart / play again button on Game Over screen | ✅ Done |
 | `localStorage` score reset on new game | ✅ Done |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
