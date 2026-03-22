@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="cyber">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,6 +63,33 @@
     <button id="settings-btn" aria-label="Settings">
       <i class="fal fa-cog" aria-hidden="true"></i>
     </button>
+
+    <!-- Settings overlay panel — toggled by the cog button -->
+    <div
+      id="settings-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+      hidden
+    >
+      <div class="settings-header">
+        <h2 id="settings-title">Settings</h2>
+        <button id="settings-close-btn" aria-label="Close settings">
+          <i class="fal fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p class="settings-section-label">Theme</p>
+      <div class="theme-options">
+        <button class="theme-btn" data-theme="cyber" aria-pressed="true">
+          <span class="theme-swatch theme-swatch--cyber" aria-hidden="true"></span>
+          Cyber
+        </button>
+        <button class="theme-btn" data-theme="neon" aria-pressed="false">
+          <span class="theme-swatch theme-swatch--neon" aria-hidden="true"></span>
+          Neon
+        </button>
+      </div>
+    </div>
 
     <div id="floating-panel" class="level1" role="complementary" aria-label="Game status">
       <div class="text-left">

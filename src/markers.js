@@ -7,6 +7,21 @@ import { markers, smlMarkers, coins, smlCoins, state, uniqueId } from './state.j
 import { upScore } from './score.js';
 
 // ---------------------------------------------------------------------------
+// CSS-variable icon helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Read a CSS custom property from `:root` and return its trimmed string value.
+ * Used so marker icon URLs are driven by the active theme's CSS variables.
+ *
+ * @param {string} varName - CSS variable name, e.g. '--icon-diamond'.
+ * @returns {string}
+ */
+function getIconUrl(varName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+// ---------------------------------------------------------------------------
 // Rocket / wormhole markers
 // ---------------------------------------------------------------------------
 
@@ -34,12 +49,12 @@ export function addWormhole(position, d) {
   const workMarker = new google.maps.Marker({
     position: markerPos,
     map: state.panorama,
-    icon: { url: 'icons/rocket.gif' },
+    icon: { url: getIconUrl('--icon-rocket') },
   });
   const workMarkersml = new google.maps.Marker({
     position: markerPos,
     map: state.map,
-    icon: 'icons/crystalgreen.png',
+    icon: getIconUrl('--icon-crystal-rocket'),
   });
 
   google.maps.event.addListener(workMarker, 'click', function () {
@@ -141,12 +156,12 @@ export function addBunch(position) {
   const coinMarker = new google.maps.Marker({
     position: markerPos,
     map: state.panorama,
-    icon: { url: 'icons/diamond.gif' },
+    icon: { url: getIconUrl('--icon-diamond') },
   });
   const coinMarkersml = new google.maps.Marker({
     position: markerPos,
     map: state.map,
-    icon: 'icons/crystalblue.png',
+    icon: getIconUrl('--icon-crystal-diamond'),
   });
 
   coins[id] = coinMarker;

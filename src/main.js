@@ -282,6 +282,69 @@ window.findMe = findMe;
 registerTiltListener();
 
 // ---------------------------------------------------------------------------
+// Theme management
+// ---------------------------------------------------------------------------
+
+const THEME_KEY = 'ssv-theme';
+const DEFAULT_THEME = 'cyber';
+
+/**
+ * Apply a theme by setting the `data-theme` attribute on `<html>` and
+ * updating the pressed state of each theme button.  Persists the choice
+ * to localStorage so it survives page reloads.
+ *
+ * @param {string} theme - The theme name ('cyber' | 'neon').
+ */
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  document.querySelectorAll('.theme-btn').forEach((btn) => {
+    btn.setAttribute('aria-pressed', btn.dataset.theme === theme ? 'true' : 'false');
+  });
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+// Restore saved theme immediately so there is no flash of the default theme.
+applyTheme(localStorage.getItem(THEME_KEY) || DEFAULT_THEME);
+
+// ---------------------------------------------------------------------------
+// Settings overlay
+// ---------------------------------------------------------------------------
+
+const settingsBtn = document.getElementById('settings-btn');
+const settingsOverlay = document.getElementById('settings-overlay');
+const settingsCloseBtn = document.getElementById('settings-close-btn');
+
+function openSettings() {
+  settingsOverlay.hidden = false;
+  settingsCloseBtn.focus();
+}
+
+function closeSettings() {
+  settingsOverlay.hidden = true;
+  settingsBtn.focus();
+}
+
+if (settingsBtn && settingsOverlay && settingsCloseBtn) {
+  settingsBtn.addEventListener('click', openSettings);
+  settingsCloseBtn.addEventListener('click', closeSettings);
+
+  // Close when clicking the backdrop (outside the panel content).
+  settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) closeSettings();
+  });
+
+  // Close on Escape key.
+  settingsOverlay.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSettings();
+  });
+
+  // Wire up theme toggle buttons.
+  settingsOverlay.querySelectorAll('.theme-btn').forEach((btn) => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Intro screen — wire up the Play button
 // ---------------------------------------------------------------------------
 
