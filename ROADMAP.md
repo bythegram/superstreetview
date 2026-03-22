@@ -48,8 +48,8 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 - ✅ **Remove jQuery dependency** — _Resolved_  
   jQuery 3.4.1 has been removed. All DOM queries, class manipulation, AJAX calls, and timers now use native browser APIs (`fetch`, `document.getElementById`, `classList`, `setTimeout`, `dataset`, `style`).
 
-- **Extract configuration into a single config object or `.env` file**  
-  Constants such as `lat`, `lng`, `apiKey`, marker URLs, and level thresholds are scattered throughout the file. Centralising them makes tuning easier and reduces the chance of inconsistency.
+- ✅ **Extract configuration into a single config object or `.env` file** — _Resolved_  
+  Constants (`apiKey`, `DEFAULT_LAT`, `DEFAULT_LNG`) are centralised in `src/config.js`. The API key is injected at build time via Vite's `VITE_GOOGLE_MAPS_API_KEY` environment variable.
 
 - ✅ **Modularise `game.js` with ES modules or a bundler** — _Resolved_  
   `game.js` has been split into seven ES modules under `src/` (`config.js`, `state.js`, `map.js`, `markers.js`, `score.js`, `timer.js`, `movement.js`) with `src/main.js` as the Vite entry point. Static assets moved to `public/`. The build outputs a minified, tree-shaken bundle in `dist/`.
@@ -67,6 +67,9 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 
 - **Mobile tilt-to-move**  
   The `tilt()` and `DeviceOrientationEvent` handler exist in the code but `tilt()` currently calls `moveForward()` on any positive β value, causing continuous movement. Add a dead-zone threshold and test on real mobile devices.
+
+- **Google Analytics 4**  
+  No analytics are currently implemented. Adding GA4 (`gtag.js`) would provide page-view and event tracking for gameplay interactions (diamond collected, rocket activated, level-up, game-over).
 
 - **Multiplayer / leaderboard support**  
   The score is stored only in `localStorage`. Adding a lightweight backend (e.g., a serverless function + database) to record and display high scores globally would increase engagement.
@@ -97,7 +100,7 @@ This document tracks known bugs, planned improvements, and best-practice refacto
 | `localStorage` score reset on new game | ✅ Done |
 | All external assets served locally or from a CDN with SRI | ⚠️ Partial |
 | `Content-Security-Policy` header set | ✅ Done |
-| Google Analytics 4 (replace UA) | ✅ Done |
+| Google Analytics 4 (replace UA) | ❌ TODO |
 | PWA manifest + service worker | ✅ Done |
 | README with setup instructions | ✅ Done |
 | `.gitignore` present | ✅ Done |
