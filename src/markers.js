@@ -112,7 +112,9 @@ export function addWormhole(position, d) {
 
           addWormhole(newPos, 1);
         })
-        .catch(() => {})
+        .catch((err) => {
+          console.error('[markers] Failed to fetch collections_en.json:', err);
+        })
         .finally(() => {
           panoEl.style.pointerEvents = 'inherit';
         });

@@ -21,7 +21,6 @@ A browser-based exploration game built on top of Google Maps Street View. Player
 | Formatter | [Prettier 3](https://prettier.io/) |
 | Icons | [Font Awesome Pro 5.13](https://fontawesome.com/) |
 | Font | [Roboto Mono – Google Fonts](https://fonts.google.com/specimen/Roboto+Mono) |
-| Analytics | Google Analytics (UA) |
 | Location data | `collections_en.json` (bundled locally, fetched directly by the client) |
 
 ## Project Structure
@@ -35,11 +34,13 @@ superstreetview/
 │   ├── map.js              # Map & Street View initialisation
 │   ├── markers.js          # Rocket (wormhole) and diamond marker logic
 │   ├── score.js            # Score tracking and level-ups
-│   ├── timer.js            # Countdown timer (stub – see ROADMAP)
+│   ├── timer.js            # Countdown timer – life deduction and game-over logic
 │   └── movement.js         # Tilt-to-move and heading helpers
 ├── public/
+│   ├── manifest.json           # PWA manifest
+│   ├── sw.js                   # Service worker (offline support)
 │   ├── collections_en.json # Dataset of curated Street View locations
-│   └── icons/              # Sprite & icon assets (GIFs and PNGs)
+│   └── icons/              # Sprite & icon assets (GIFs, PNGs and SVGs)
 ├── index.html              # Main HTML shell
 ├── style.css               # All styling
 ├── vite.config.js          # Vite bundler configuration

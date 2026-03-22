@@ -10,7 +10,7 @@ This document describes the automated agent capabilities available for the **Sup
 
 **Trigger:** Open a pull request or run the review agent manually.  
 **What it does:**
-- Analyses `game.js`, `style.css`, and `index.html` for code-quality issues.
+- Analyses the `src/` modules (`main.js`, `map.js`, `markers.js`, `score.js`, `timer.js`, `movement.js`), `style.css`, and `index.html` for code-quality issues.
 - Flags undeclared variables, dead code, unused variables, and implicit globals.
 - Checks for exposed credentials or API keys.
 - Verifies that `let`/`const` is preferred over `var`.
@@ -49,7 +49,7 @@ This document describes the automated agent capabilities available for the **Sup
 
 **Trigger:** Manual, or when source files change significantly.  
 **What it does:**
-- Reads `game.js` and generates JSDoc-style comments for each public function.
+- Reads each `src/` module and generates JSDoc-style comments for each public function.
 - Updates the function reference section of this file with signatures, parameters, return values, and a one-line description.
 - Detects functions that lack inline comments and flags them for human review.
 
@@ -85,7 +85,7 @@ This document describes the automated agent capabilities available for the **Sup
 
 **Trigger:** Required on every pull request or code change; can also be run manually.  
 **What it does:**
-- Reviews all changes made to source files (`game.js`, `index.html`, `style.css`, `collections_en.json`, etc.).
+- Reviews all changes made to source files (`src/main.js`, `src/map.js`, `src/markers.js`, `src/score.js`, `src/timer.js`, `src/movement.js`, `src/state.js`, `src/config.js`, `index.html`, `style.css`, `public/collections_en.json`, etc.).
 - Updates `README.md` to reflect any changes to the tech stack, project structure, prerequisites, or setup steps.
 - Updates `ROADMAP.md` to mark completed items (✅), revise in-progress items, and add new items based on changes or issues introduced by the code change.
 - Ensures that both documents are accurate and consistent with the current state of the codebase after every commit.
@@ -94,21 +94,53 @@ This document describes the automated agent capabilities available for the **Sup
 
 ---
 
-## Function Reference (`game.js`)
+## Function Reference (`src/`)
+
+The codebase is split across eight ES modules under `src/`. Key exported functions are listed below.
+
+### `src/main.js`
 
 | Function | Parameters | Description |
 |---|---|---|
-| `getLocation()` | – | Entry point. Requests browser geolocation and dispatches to `browserGeolocationSuccess` or `browserGeolocationFail`. |
-| `browserGeolocationSuccess(position)` | `position` – GeolocationPosition | Reverse-geocodes the browser position to the nearest intersection, then calls `initMap`. |
-| `browserGeolocationFail()` | – | Falls back to Google Geolocation API. On failure, falls back to hardcoded Toronto coordinates. |
-| `initMap(position)` | `position` – `{coords: {latitude, longitude}}` | Initialises the Google Map and Street View panorama, starts the timer, and seeds the initial markers. |
-| `addWormhole(position, d)` | `position` – position object; `d` – radius in metres | Places a rocket marker on the panorama and mini-map. On click, teleports the player to a random Street View location. |
-| `addBunch(position)` | `position` – position object | Places a diamond marker. On click, increments the score and spawns three new diamonds nearby. |
-| `upScore()` | – | Increments the score, updates `localStorage`, checks for a level-up, and spawns new rocket markers when a level is reached. |
-| `startTimer(duration, display)` | `duration` – seconds; `display` – DOM element | Countdown timer (currently commented out). Decrements remaining time and triggers Game Over when time runs out and no lives remain. |
-| `clearMarkers()` | – | Removes all rocket markers from the map and panorama. |
-| `clearCoin(id)` | `id` – integer | Removes a specific diamond marker by its array index. |
-| `setMapOnAll(map)` | `map` – google.maps.Map or null | Helper that sets (or unsets) the map for every rocket marker and its mini-map counterpart. |
-| `moveForward(pano)` | `pano` – StreetViewPanorama | Advances the panorama to the adjacent Street View node closest to the current heading. |
-| `difference(link)` | `link` – Street View link object | Returns the angular difference (in degrees) between the current panorama heading and a link's heading. |
+| `getLocation()` | – | Maps API `callback` target. Sets `mapsReady = true` and starts geolocation if the user has already clicked Play. Exposed on `window`. |
+| `findMe()` | – | Requests the device's current position and moves the game to that location mid-session. Exposed on `window`. |
+
+### `src/map.js`
+
+| Function | Parameters | Description |
+|---|---|---|
+| `initMap(position)` | `position` – `{coords:{latitude,longitude}}` | Initialises the Google Map and Street View panorama, seeds 7 rockets + 8 diamonds, and starts the 60 s countdown timer. |
+| `showGameOver()` | – | Syncs the high-score display and reveals the game-over overlay; moves keyboard focus to the restart button. |
+| `restartGame()` | – | Clears all markers, resets score/level/lives, returns the panorama to the start, and re-seeds the initial marker set — no page reload required. |
+| `relocate(position)` | `position` – `{coords:{latitude,longitude}}` | Moves the game to a new location without resetting the score or timer. Used by the "Find Me" button. |
+
+### `src/markers.js`
+
+| Function | Parameters | Description |
+|---|---|---|
+| `addWormhole(position, d)` | `position` – position object; `d` – radius in metres | Places a rocket marker at a random location within `d` metres of `position`. On click, teleports the player to a random Street View location from `collections_en.json`. |
+| `addBunch(position)` | `position` – position object | Places a diamond marker near `position`. On click, increments the score and spawns three new diamonds nearby. |
+| `clearMarkers()` | – | Removes all rocket markers from both the panorama and mini-map layers. |
+| `clearCoin(id)` | `id` – integer | Removes the diamond marker pair identified by `id` from both layers. |
+| `setMapOnAll(targetMap)` | `targetMap` – `google.maps.Map` or `null` | Sets (or clears) the map reference for every rocket marker and its mini-map counterpart. |
+
+### `src/score.js`
+
+| Function | Parameters | Description |
+|---|---|---|
+| `upScore()` | – | Increments the score by 1, persists it to `localStorage`, updates the high-score display, and triggers a level-up (+ spawns 8 rockets) every 10 points. |
+
+### `src/timer.js`
+
+| Function | Parameters | Description |
+|---|---|---|
+| `startTimer(duration, display)` | `duration` – seconds; `display` – DOM element | Starts (or restarts) a countdown timer that ticks every second. On expiry: returns out-of-bounds players to start, deducts a life, or shows game-over when lives reach zero. |
+
+### `src/movement.js`
+
+| Function | Parameters | Description |
+|---|---|---|
+| `moveForward(pano)` | `pano` – `StreetViewPanorama` | Advances the panorama one step towards the adjacent node closest to the current heading. |
+| `difference(link)` | `link` – Street View link object | Returns the angular difference (0–180°) between the panorama's current heading and a link's heading. |
 | `tilt(x)` | `x` – device β angle | Triggers `moveForward` when the device is tilted forward (positive β). |
+| `registerTiltListener()` | – | Registers a `deviceorientation` event listener that calls `tilt()` on each orientation update. |
