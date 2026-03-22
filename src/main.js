@@ -272,6 +272,15 @@ function findMe() {
 // Bootstrap
 // ---------------------------------------------------------------------------
 
+// Register the service worker for offline-capable PWA support.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('./sw.js')
+      .catch((err) => console.warn('[sw] Service worker registration failed:', err));
+  });
+}
+
 // Expose getLocation globally so the Maps API `callback=getLocation` works.
 window.getLocation = getLocation;
 
