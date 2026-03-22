@@ -1,21 +1,57 @@
 /* =============================================================================
-   Design Tokens
+   Design Tokens — Cyber theme (default)
    ============================================================================= */
-:root {
+:root,
+[data-theme='cyber'] {
   --bg: #07111f;
   --surface: rgba(7, 17, 31, 0.92);
   --surface-light: rgba(10, 25, 48, 0.78);
-  --cyan: #00d4ff;
-  --cyan-faint: rgba(0, 212, 255, 0.08);
-  --cyan-mid: rgba(0, 212, 255, 0.28);
-  --cyan-glow: rgba(0, 212, 255, 0.55);
-  --cyan-dark: #0098b8;
+  --accent: #00d4ff;
+  --accent-faint: rgba(0, 212, 255, 0.08);
+  --accent-mid: rgba(0, 212, 255, 0.28);
+  --accent-glow: rgba(0, 212, 255, 0.55);
+  --accent-dark: #0098b8;
+  --accent-hover: #33deff;
   --text: #c8e8ff;
   --muted: rgba(200, 232, 255, 0.5);
   --border: rgba(0, 212, 255, 0.2);
+  --overlay-bg: rgba(5, 10, 20, 0.97);
+  --grid-color: rgba(0, 212, 255, 0.04);
+  --hud-shadow: rgba(0, 212, 255, 0.1);
   --font-display: 'Orbitron', monospace;
   --font-ui: 'Roboto Mono', monospace;
   --ease: 0.2s ease;
+  --icon-diamond: icons/diamond.gif;
+  --icon-rocket: icons/rocket.gif;
+  --icon-crystal-diamond: icons/crystalblue.png;
+  --icon-crystal-rocket: icons/crystalgreen.png;
+}
+
+/* =============================================================================
+   Design Tokens — Neon theme
+   ============================================================================= */
+[data-theme='neon'] {
+  --bg: #0f0720;
+  --surface: rgba(15, 7, 32, 0.92);
+  --surface-light: rgba(22, 10, 46, 0.78);
+  --accent: #e040fb;
+  --accent-faint: rgba(224, 64, 251, 0.08);
+  --accent-mid: rgba(224, 64, 251, 0.28);
+  --accent-glow: rgba(224, 64, 251, 0.55);
+  --accent-dark: #aa00cc;
+  --accent-hover: #ea6fff;
+  --text: #f5c8ff;
+  --muted: rgba(245, 200, 255, 0.5);
+  --border: rgba(224, 64, 251, 0.2);
+  --overlay-bg: rgba(8, 2, 18, 0.97);
+  --grid-color: rgba(224, 64, 251, 0.04);
+  --hud-shadow: rgba(224, 64, 251, 0.1);
+  --font-display: 'Orbitron', monospace;
+  --font-ui: 'Roboto Mono', monospace;
+  --icon-diamond: icons/diamond-neon.svg;
+  --icon-rocket: icons/rocket-neon.svg;
+  --icon-crystal-diamond: icons/crystal-diamond-neon.svg;
+  --icon-crystal-rocket: icons/crystal-rocket-neon.svg;
 }
 
 /* =============================================================================
@@ -51,7 +87,7 @@ body {
   z-index: 10000;
   padding: 6px 14px;
   background: var(--bg);
-  color: var(--cyan);
+  color: var(--accent);
   font-family: var(--font-ui);
   font-size: 13px;
   text-decoration: none;
@@ -74,7 +110,7 @@ body {
   height: 100%;
 }
 #pano:focus-visible {
-  outline: 3px solid var(--cyan);
+  outline: 3px solid var(--accent);
   outline-offset: -3px;
 }
 
@@ -89,11 +125,11 @@ body {
   right: 12px;
   z-index: 5;
   border-radius: 50%;
-  border: 2px solid var(--cyan);
+  border: 2px solid var(--accent);
   opacity: 0.75;
   box-shadow:
-    0 0 14px var(--cyan-glow),
-    inset 0 0 14px var(--cyan-faint);
+    0 0 14px var(--accent-glow),
+    inset 0 0 14px var(--accent-faint);
 }
 #map::after {
   height: 160px;
@@ -102,7 +138,7 @@ body {
   bottom: 0;
   left: 0;
   z-index: 6;
-  background-color: var(--cyan-faint);
+  background-color: var(--accent-faint);
   border-radius: 50%;
   content: '';
 }
@@ -120,7 +156,7 @@ body {
   z-index: 5;
   background: var(--surface);
   border: 1px solid var(--border);
-  color: var(--cyan);
+  color: var(--accent);
   font-size: 18px;
   cursor: pointer;
   padding: 8px 10px;
@@ -129,7 +165,7 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0.85;
-  box-shadow: 0 0 10px var(--cyan-mid);
+  box-shadow: 0 0 10px var(--accent-mid);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition:
@@ -139,14 +175,146 @@ body {
 }
 #settings-btn:hover {
   opacity: 1;
-  border-color: var(--cyan);
-  box-shadow: 0 0 14px var(--cyan-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
 #settings-btn:focus-visible {
   outline: none;
   opacity: 1;
-  border-color: var(--cyan);
-  box-shadow: 0 0 12px var(--cyan-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* =============================================================================
+   Settings overlay panel
+   ============================================================================= */
+#settings-overlay {
+  position: fixed;
+  top: 52px;
+  left: 12px;
+  z-index: 9000;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 230px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 24px var(--accent-mid),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: settings-appear var(--ease) forwards;
+  color: var(--text);
+}
+#settings-overlay[hidden] {
+  display: none;
+}
+
+@keyframes settings-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.settings-header h2 {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+#settings-close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 14px;
+  transition: color var(--ease);
+}
+#settings-close-btn:hover {
+  color: var(--accent);
+}
+#settings-close-btn:focus-visible {
+  outline: 1px solid var(--accent);
+  border-radius: 2px;
+}
+
+.settings-section-label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.theme-options {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 4px;
+  transition:
+    border-color var(--ease),
+    box-shadow var(--ease),
+    color var(--ease);
+}
+.theme-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.theme-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-mid);
+}
+.theme-btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Theme swatch previews inside buttons */
+.theme-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.theme-swatch--cyber {
+  background: linear-gradient(135deg, #07111f 50%, #00d4ff 100%);
+}
+.theme-swatch--neon {
+  background: linear-gradient(135deg, #0f0720 50%, #e040fb 100%);
 }
 
 /* =============================================================================
@@ -158,7 +326,7 @@ body {
   left: 0;
   width: 100%;
   z-index: 5;
-  color: var(--cyan);
+  color: var(--accent);
   font-size: clamp(16px, 3vw, 28px);
   box-sizing: border-box;
   padding: 8px 16px;
@@ -166,7 +334,7 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
-  box-shadow: 0 -4px 24px rgba(0, 212, 255, 0.1);
+  box-shadow: 0 -4px 24px var(--hud-shadow);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -208,13 +376,13 @@ body {
   position: absolute;
   top: -36px;
   left: 0;
-  color: var(--cyan);
+  color: var(--accent);
   font-weight: 400;
   font-size: 13px;
   display: none;
   white-space: nowrap;
   animation: float-up 0.5s ease forwards;
-  text-shadow: 0 0 10px var(--cyan-glow);
+  text-shadow: 0 0 10px var(--accent-glow);
 }
 
 @keyframes float-up {
@@ -235,7 +403,7 @@ body {
 #end-game-btn {
   background: none;
   border: 1px solid transparent;
-  color: var(--cyan);
+  color: var(--accent);
   font-size: inherit;
   cursor: pointer;
   padding: 4px 8px;
@@ -252,14 +420,14 @@ body {
 #end-game-btn:hover {
   opacity: 1;
   border-color: var(--border);
-  box-shadow: 0 0 10px var(--cyan-mid);
+  box-shadow: 0 0 10px var(--accent-mid);
 }
 #find-me-btn:focus-visible,
 #end-game-btn:focus-visible {
   outline: none;
   opacity: 1;
-  border-color: var(--cyan);
-  box-shadow: 0 0 12px var(--cyan-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 /* =============================================================================
@@ -282,7 +450,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 4px;
-  box-shadow: 0 0 20px var(--cyan-mid);
+  box-shadow: 0 0 20px var(--accent-mid);
 }
 
 /* =============================================================================
@@ -311,7 +479,7 @@ body {
   top: 0;
   left: 0;
   z-index: 9999;
-  background-color: rgba(5, 10, 20, 0.97);
+  background-color: var(--overlay-bg);
   color: var(--text);
 }
 
@@ -322,8 +490,8 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
   z-index: 0;
@@ -350,14 +518,14 @@ body {
   font-weight: 700;
   letter-spacing: 3px;
   color: var(--bg);
-  background: var(--cyan);
+  background: var(--accent);
   border: none;
   border-radius: 3px;
   cursor: pointer;
   text-transform: uppercase;
   box-shadow:
-    0 0 16px var(--cyan-glow),
-    0 0 40px var(--cyan-mid);
+    0 0 16px var(--accent-glow),
+    0 0 40px var(--accent-mid);
   transition:
     background var(--ease),
     box-shadow var(--ease),
@@ -365,10 +533,10 @@ body {
 }
 #play-btn:hover,
 #restart-btn:hover {
-  background: #33deff;
+  background: var(--accent-hover);
   box-shadow:
-    0 0 24px var(--cyan-glow),
-    0 0 60px var(--cyan-mid);
+    0 0 24px var(--accent-glow),
+    0 0 60px var(--accent-mid);
   transform: translateY(-1px);
 }
 #play-btn:active,
@@ -377,7 +545,7 @@ body {
 }
 #play-btn:focus-visible,
 #restart-btn:focus-visible {
-  outline: 3px solid var(--cyan-dark);
+  outline: 3px solid var(--accent-dark);
   outline-offset: 3px;
 }
 
@@ -406,10 +574,10 @@ body {
   padding: 0;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--accent);
   text-shadow:
-    0 0 20px var(--cyan-glow),
-    0 0 60px var(--cyan-mid);
+    0 0 20px var(--accent-glow),
+    0 0 60px var(--accent-mid);
 }
 
 .intro-tagline {
@@ -426,7 +594,7 @@ body {
   height: 1px;
   background: var(--border);
   margin: 0 auto 28px;
-  box-shadow: 0 0 8px var(--cyan-mid);
+  box-shadow: 0 0 8px var(--accent-mid);
 }
 
 .intro-list {
@@ -447,15 +615,15 @@ body {
   gap: 12px;
 }
 .intro-list li i {
-  color: var(--cyan);
+  color: var(--accent);
   width: 16px;
   flex-shrink: 0;
   font-size: 0.9em;
-  text-shadow: 0 0 8px var(--cyan-glow);
+  text-shadow: 0 0 8px var(--accent-glow);
 }
 .intro-list strong {
   font-weight: 700;
-  color: var(--cyan);
+  color: var(--accent);
 }
 
 .intro-location-note {
@@ -469,7 +637,7 @@ body {
 }
 .intro-location-note i {
   margin-right: 6px;
-  color: var(--cyan);
+  color: var(--accent);
   opacity: 0.8;
 }
 
@@ -498,10 +666,10 @@ body {
   padding: 0;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--accent);
   text-shadow:
-    0 0 20px var(--cyan-glow),
-    0 0 60px var(--cyan-mid);
+    0 0 20px var(--accent-glow),
+    0 0 60px var(--accent-mid);
 }
 
 #gameover h2 {
@@ -515,8 +683,8 @@ body {
 
 #gameover h2 span {
   font-weight: 700;
-  color: var(--cyan);
-  text-shadow: 0 0 12px var(--cyan-glow);
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .gameover-sub {
@@ -528,11 +696,11 @@ body {
 }
 
 .gameover-sub a {
-  color: var(--cyan);
+  color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid var(--border);
   transition: border-color var(--ease);
 }
 .gameover-sub a:hover {
-  border-color: var(--cyan);
+  border-color: var(--accent);
 }

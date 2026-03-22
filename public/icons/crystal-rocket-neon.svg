@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 24" width="16" height="24">
+  <!-- Body -->
+  <ellipse cx="8" cy="11" rx="5" ry="9" fill="#e040fb" stroke="#f06fff" stroke-width="1.5"/>
+  <!-- Nose cone -->
+  <path d="M3,9 Q8,1 13,9" fill="#f06fff"/>
+  <!-- Fins -->
+  <path d="M3,16 L1,23 L6,19" fill="#b000d0"/>
+  <path d="M13,16 L15,23 L10,19" fill="#b000d0"/>
+  <!-- Window -->
+  <circle cx="8" cy="13" r="2.5" fill="#ffffff" opacity="0.2"/>
+</svg>
